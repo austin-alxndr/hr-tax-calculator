@@ -1,4 +1,5 @@
 import streamlit as st
+import math
 from threshold import ter_thresholds
 
 ter_thresholds = ter_thresholds
@@ -20,7 +21,7 @@ def calculate_ter(marriage_status, dependencies):
 
 def calculate_gross_salary(monthly_salary):
     bonus = (monthly_salary * 0.24 / 100) + (monthly_salary * 0.3 / 100)
-    additional = monthly_salary * 4 / 100 if monthly_salary <= 10000000 else 480000
+    additional = monthly_salary * 4 / 100 if monthly_salary < 12000000 else 480000
     return monthly_salary + bonus + additional
 
 def find_tax_rate(gross_salary, classification):
@@ -62,11 +63,13 @@ def nett_to_monthly_calculator(nett_salary, marriage_status, dependencies):
             break
         monthly_salary += 1
 
+    monthly_salary = math.ceil(monthly_salary / 1000) * 1000 + 5000
+
     return {
         "Nett Salary": f"IDR {nett_salary:,.0f}",
         "Monthly Salary": f"IDR {monthly_salary:,.0f}",
         "TER": result["TER"],
-        "Gross Salary": result["Gross Salary"],
+        "Gross Salary Tax": result["Gross Salary"],
         "Tax Rate (%)": result["Tax Rate (%)"],
         "Salary Tax": result["Salary Tax"]
     }
